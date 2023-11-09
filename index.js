@@ -36,11 +36,22 @@ async function run() {
 
         const blogsCollection = client.db('blogDB').collection('category')
         const categoryCollection = client.db('blogDB').collection('blogs')
-
+        app.post('/api/v1/blogs', async (req, res) => {
+            const newProduct = req.body;
+            console.log(newProduct);
+            const result = await categoryCollection.insertOne(newProduct);
+            res.send(result)
+        })
 
         app.get('/api/v1/blogs', async (req, res) => {
             const cursor = categoryCollection.find();
             const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.get('/api/v1/blog/:categoryName', async (req, res) => {
+            const category = req.params.brandName;
+            const result = await blogsCollection.find({ name: category }).toArray();
             res.send(result);
         })
 
